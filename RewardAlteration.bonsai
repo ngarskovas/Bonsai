@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorkflowBuilder Version="2.3.0">
+  <Workflow xmlns:q2="clr-namespace:Bonsai.Scripting;assembly=Bonsai.Scripting" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:q3="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:q4="clr-namespace:Bonsai.PointGrey;assembly=Bonsai.PointGrey" xmlns:q1="clr-namespace:Bonsai.IO;assembly=Bonsai.System" xmlns="https://horizongir.org/bonsai">
+    <Nodes>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q1:SerialStringWrite">
+          <q1:PortName>COM3</q1:PortName>
+          <q1:NewLine />
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q1:SerialStringWrite">
+          <q1:PortName>COM3</q1:PortName>
+          <q1:NewLine />
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="Gate" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="Gate" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="DistinctUntilChanged" />
+      </Expression>
+      <Expression xsi:type="Multiply">
+        <Operand xsi:type="IntProperty">
+          <Value>2</Value>
+        </Operand>
+      </Expression>
+      <Expression xsi:type="q2:ExpressionTransform">
+        <q2:Expression>Convert.ToInt32(it)</q2:Expression>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="DistinctUntilChanged" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q3:RoiActivityDetected">
+          <q3:Index>0</q3:Index>
+          <q3:Threshold>1000</q3:Threshold>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="q2:ExpressionTransform">
+        <q2:Expression>Convert.ToInt32(it)</q2:Expression>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q3:RoiActivityDetected">
+          <q3:Index>1</q3:Index>
+          <q3:Threshold>1000</q3:Threshold>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q3:RoiActivity">
+          <q3:Regions>
+            <q3:ArrayOfPoint>
+              <q3:Point>
+                <q3:X>967</q3:X>
+                <q3:Y>309</q3:Y>
+              </q3:Point>
+              <q3:Point>
+                <q3:X>1077</q3:X>
+                <q3:Y>309</q3:Y>
+              </q3:Point>
+              <q3:Point>
+                <q3:X>1077</q3:X>
+                <q3:Y>425</q3:Y>
+              </q3:Point>
+              <q3:Point>
+                <q3:X>967</q3:X>
+                <q3:Y>425</q3:Y>
+              </q3:Point>
+            </q3:ArrayOfPoint>
+            <q3:ArrayOfPoint>
+              <q3:Point>
+                <q3:X>1113</q3:X>
+                <q3:Y>516</q3:Y>
+              </q3:Point>
+              <q3:Point>
+                <q3:X>1259</q3:X>
+                <q3:Y>516</q3:Y>
+              </q3:Point>
+              <q3:Point>
+                <q3:X>1259</q3:X>
+                <q3:Y>640</q3:Y>
+              </q3:Point>
+              <q3:Point>
+                <q3:X>1113</q3:X>
+                <q3:Y>640</q3:Y>
+              </q3:Point>
+            </q3:ArrayOfPoint>
+          </q3:Regions>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q3:HsvThreshold">
+          <q3:Lower>
+            <q3:Val0>90</q3:Val0>
+            <q3:Val1>140</q3:Val1>
+            <q3:Val2>160</q3:Val2>
+            <q3:Val3>0</q3:Val3>
+          </q3:Lower>
+          <q3:Upper>
+            <q3:Val0>160</q3:Val0>
+            <q3:Val1>200</q3:Val1>
+            <q3:Val2>200</q3:Val2>
+            <q3:Val3>255</q3:Val3>
+          </q3:Upper>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q3:ConvertColor">
+          <q3:Conversion>Bgr2Luv</q3:Conversion>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Source.Image</Selector>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q4:FlyCapture">
+          <q4:Index>1</q4:Index>
+          <q4:ColorFormat>Bgr</q4:ColorFormat>
+          <q4:ColorProcessing>Default</q4:ColorProcessing>
+        </Combinator>
+      </Expression>
+    </Nodes>
+    <Edges>
+      <Edge>
+        <From>2</From>
+        <To>0</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>3</From>
+        <To>1</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>4</From>
+        <To>2</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>5</From>
+        <To>3</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>6</From>
+        <To>4</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>7</From>
+        <To>5</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>8</From>
+        <To>6</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>9</From>
+        <To>7</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>10</From>
+        <To>9</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>11</From>
+        <To>8</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>11</From>
+        <To>10</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>12</From>
+        <To>11</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>12</From>
+        <To>2</To>
+        <Label>Source2</Label>
+      </Edge>
+      <Edge>
+        <From>12</From>
+        <To>3</To>
+        <Label>Source2</Label>
+      </Edge>
+      <Edge>
+        <From>13</From>
+        <To>12</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>14</From>
+        <To>13</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>15</From>
+        <To>14</To>
+        <Label>Source1</Label>
+      </Edge>
+    </Edges>
+  </Workflow>
+  <ExtensionTypes>
+    <Type>Bonsai.IO.SerialStringWrite, Bonsai.System, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Reactive.Gate, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Reactive.DistinctUntilChanged, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Expressions.MultiplyBuilder, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Expressions.IntProperty, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Scripting.ExpressionTransform, Bonsai.Scripting, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.RoiActivityDetected, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.RoiActivity, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.HsvThreshold, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.ConvertColor, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.PointGrey.FlyCapture, Bonsai.PointGrey, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+  </ExtensionTypes>
+</WorkflowBuilder>
