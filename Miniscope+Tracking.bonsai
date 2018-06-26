@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorkflowBuilder Version="2.3.0">
+  <Workflow xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:q3="clr-namespace:Bonsai.IO;assembly=Bonsai.System" xmlns:q2="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision" xmlns:q1="clr-namespace:Bonsai.Miniscope;assembly=Bonsai.Miniscope" xmlns="https://horizongir.org/bonsai">
+    <Nodes>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q1:UCLAMiniscope">
+          <q1:Index>0</q1:Index>
+          <q1:LEDBrightness>0</q1:LEDBrightness>
+          <q1:Exposure>255</q1:Exposure>
+          <q1:SensorGain>64</q1:SensorGain>
+          <q1:FramesPerSecond>FPS30</q1:FramesPerSecond>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:AffineTransform">
+          <q2:Pivot>
+            <q2:X>376</q2:X>
+            <q2:Y>376</q2:Y>
+          </q2:Pivot>
+          <q2:Translation>
+            <q2:X>0</q2:X>
+            <q2:Y>0</q2:Y>
+          </q2:Translation>
+          <q2:Rotation>1.57</q2:Rotation>
+          <q2:Scale>
+            <q2:X>1</q2:X>
+            <q2:Y>1</q2:Y>
+          </q2:Scale>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:WarpAffine">
+          <q2:Transform>0.0007962743,0.9999997,-0.2992859;-0.9999997,0.0007962743,751.7004</q2:Transform>
+          <q2:Flags>Linear</q2:Flags>
+          <q2:FillValue>
+            <q2:Val0>0</q2:Val0>
+            <q2:Val1>0</q2:Val1>
+            <q2:Val2>0</q2:Val2>
+            <q2:Val3>0</q2:Val3>
+          </q2:FillValue>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="ExternalizedPropertyOfMatWarpAffine">
+        <MemberName>Transform</MemberName>
+        <Name>Transform</Name>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:ResizeCanvas">
+          <q2:Size>
+            <q2:Width>752</q2:Width>
+            <q2:Height>752</q2:Height>
+          </q2:Size>
+          <q2:BorderType>Constant</q2:BorderType>
+          <q2:FillValue>
+            <q2:Val0>0</q2:Val0>
+            <q2:Val1>0</q2:Val1>
+            <q2:Val2>0</q2:Val2>
+            <q2:Val3>0</q2:Val3>
+          </q2:FillValue>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:ResizeCanvas">
+          <q2:Size>
+            <q2:Width>480</q2:Width>
+            <q2:Height>752</q2:Height>
+          </q2:Size>
+          <q2:BorderType>Constant</q2:BorderType>
+          <q2:FillValue>
+            <q2:Val0>0</q2:Val0>
+            <q2:Val1>0</q2:Val1>
+            <q2:Val2>0</q2:Val2>
+            <q2:Val3>0</q2:Val3>
+          </q2:FillValue>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Source.Width</Selector>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Source.Height</Selector>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="Max" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="Merge" />
+      </Expression>
+      <Expression xsi:type="SelectMany">
+        <Name>Save Batch</Name>
+        <Description>Videowriter saves a time-interval of video
+Video files are titled "rawscope_[timestamp].avi"</Description>
+        <Workflow>
+          <Nodes>
+            <Expression xsi:type="WorkflowInput">
+              <Name>Source1</Name>
+            </Expression>
+            <Expression xsi:type="WorkflowOutput" />
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="q2:VideoWriter">
+                <q2:FileName>scope_.avi</q2:FileName>
+                <q2:Suffix>Timestamp</q2:Suffix>
+                <q2:Buffered>true</q2:Buffered>
+                <q2:Overwrite>false</q2:Overwrite>
+                <q2:FourCC>DIB </q2:FourCC>
+                <q2:FrameRate>30</q2:FrameRate>
+                <q2:FrameSize>
+                  <q2:Width>0</q2:Width>
+                  <q2:Height>0</q2:Height>
+                </q2:FrameSize>
+                <q2:ResizeInterpolation>NearestNeighbor</q2:ResizeInterpolation>
+              </Combinator>
+            </Expression>
+          </Nodes>
+          <Edges>
+            <Edge>
+              <From>0</From>
+              <To>2</To>
+              <Label>Source1</Label>
+            </Edge>
+            <Edge>
+              <From>2</From>
+              <To>1</To>
+              <Label>Source1</Label>
+            </Edge>
+          </Edges>
+        </Workflow>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="ElementCountWindow">
+          <Count>1000</Count>
+          <Skip xsi:nil="true" />
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="q3:CsvWriter">
+        <q3:FileName>MousePos</q3:FileName>
+        <q3:Append>false</q3:Append>
+        <q3:Overwrite>false</q3:Overwrite>
+        <q3:Suffix>Timestamp</q3:Suffix>
+        <q3:IncludeHeader>false</q3:IncludeHeader>
+        <q3:Selector>Source</q3:Selector>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Source.Centroid</Selector>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:LargestBinaryRegion" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:BinaryRegionAnalysis" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:FindContours">
+          <q2:Mode>External</q2:Mode>
+          <q2:Method>ChainApproxNone</q2:Method>
+          <q2:Offset>
+            <q2:X>0</q2:X>
+            <q2:Y>0</q2:Y>
+          </q2:Offset>
+          <q2:MinArea xsi:nil="true" />
+          <q2:MaxArea xsi:nil="true" />
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:HsvThreshold">
+          <q2:Lower>
+            <q2:Val0>0</q2:Val0>
+            <q2:Val1>0</q2:Val1>
+            <q2:Val2>0</q2:Val2>
+            <q2:Val3>0</q2:Val3>
+          </q2:Lower>
+          <q2:Upper>
+            <q2:Val0>50</q2:Val0>
+            <q2:Val1>50</q2:Val1>
+            <q2:Val2>50</q2:Val2>
+            <q2:Val3>255</q2:Val3>
+          </q2:Upper>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:CameraCapture">
+          <q2:Index>0</q2:Index>
+          <q2:CaptureProperties />
+        </Combinator>
+      </Expression>
+    </Nodes>
+    <Edges>
+      <Edge>
+        <From>0</From>
+        <To>4</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>0</From>
+        <To>6</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>0</From>
+        <To>7</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>1</From>
+        <To>3</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>2</From>
+        <To>5</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>3</From>
+        <To>2</To>
+        <Label>Source2</Label>
+      </Edge>
+      <Edge>
+        <From>4</From>
+        <To>2</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>5</From>
+        <To>11</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>6</From>
+        <To>9</To>
+        <Label>Source2</Label>
+      </Edge>
+      <Edge>
+        <From>7</From>
+        <To>9</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>9</From>
+        <To>8</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>11</From>
+        <To>10</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>13</From>
+        <To>12</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>14</From>
+        <To>13</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>15</From>
+        <To>14</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>16</From>
+        <To>15</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>17</From>
+        <To>16</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>18</From>
+        <To>17</To>
+        <Label>Source1</Label>
+      </Edge>
+    </Edges>
+  </Workflow>
+  <ExtensionTypes>
+    <Type>Bonsai.Miniscope.UCLAMiniscope, Bonsai.Miniscope, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.AffineTransform, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.WarpAffine, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Expressions.ExternalizedProperty`2[[OpenCV.Net.Mat, OpenCV.Net, Version=3.3.0.0, Culture=neutral, PublicKeyToken=null],[Bonsai.Vision.WarpAffine, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null]], Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.ResizeCanvas, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Reactive.Max, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Reactive.Merge, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.VideoWriter, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Reactive.ElementCountWindow, Bonsai.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.IO.CsvWriter, Bonsai.System, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.LargestBinaryRegion, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.BinaryRegionAnalysis, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.FindContours, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.HsvThreshold, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.CameraCapture, Bonsai.Vision, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null</Type>
+  </ExtensionTypes>
+</WorkflowBuilder>
